@@ -40,7 +40,6 @@ buscar_clima_meteoblue <- function(api_key, lat, lon) {
   if (status_code(resposta) == 200) {
     clima <- content(resposta, "parsed", simplifyVector = FALSE)  # ❗ Mantemos como lista para evitar erro
     
-    # Garantir que os dados sejam extraídos corretamente
     temperatura <- ifelse(!is.null(clima$data_1h$temperature), as.numeric(clima$data_1h$temperature[[1]]), "Não disponível")
     precipitacao <- ifelse(!is.null(clima$data_1h$precipitation), as.numeric(clima$data_1h$precipitation[[1]]), "Não disponível")
     umidade <- ifelse(!is.null(clima$data_1h$relativehumidity), as.numeric(clima$data_1h$relativehumidity[[1]]), "Não disponível")
@@ -56,23 +55,23 @@ buscar_clima_meteoblue <- function(api_key, lat, lon) {
   }
 }
 
-# Capturar dados do usuário (copiados do Python)
+# Pedido para inclusão de dados das lavouras
 cat("\n📋 Cole os dados da plantação no formato JSON e pressione ENTER duas vezes:\n")
 
-# Lê todas as linhas da entrada como texto
+# Lendo os dados de entrada como texto
 dados_json <- scan(what = "", quiet = TRUE, sep = "\n")
 
 # Junta todas as linhas para formar um JSON válido
 dados_json <- paste(dados_json, collapse = "")
 
-# Converter JSON para dataframe
+# Convertendo os dados enviados de JSON para Dataframe
 dados <- fromJSON(dados_json)
 
-# Exibir os dados carregados
+# Exibir os dados das lavouras carregados
 cat("\n✅ Dados carregados com sucesso:\n")
 print(dados)
 
-# Função para calcular estatísticas básicas
+# Função para calcular estatísticas básicas das lavouras
 calcular_estatisticas <- function(dados) {
   areas <- as.numeric(dados$`Área (m²)`)
   insumos <- as.numeric(dados$`Insumo Total (L)`)
@@ -90,11 +89,11 @@ calcular_estatisticas <- function(dados) {
   cat("Desvio Padrão do Insumo: ", round(desvio_insumo, 2), "L\n")
 }
 
-# Calcular estatísticas
+# Execução Cálculo de estatísticas básicas das lavouras
 calcular_estatisticas(dados)
 
-# Perguntar ao usuário a cidade para buscar o clima
-api_key <- "ETl9skMajh0gS4Zc"  # Substitua pela sua chave da meteoblue
+# Escolha da Cidade para exibir o clima atual
+api_key <- "ETl9skMajh0gS4Zc" 
 cidade <- readline("\n🌍 Digite o nome da cidade para buscar dados meteorológicos: ")
 
 coordenadas <- obter_coordenadas(api_key, cidade)
