@@ -1,34 +1,31 @@
 import sys
 import json
 
-# Lista fixa de insumos disponíveis para cada cultura
+#Lista fixa de insumos disponíveis para cada cultura
 INSUMOS_CAFE = ["Fosfato Monoamônico (MAP)", "Sulfato de Amônio", "Calcário Dolomítico"]
 INSUMOS_CANA = ["Ureia", "Cloreto de Potássio", "Superfosfato Simples"]
 
-# Lista para armazenar os dados das plantações
+#Lista para armazenar os dados das plantações
 plantacoes = []
 
 
+#Calculando a área do losango
 def calcular_area(diagonal_maior, diagonal_menor):
-    """Calcula a área do losango"""
     return (diagonal_maior * diagonal_menor) / 2
 
-
+#Calculando a quantidade de ruas na lavoura de acordo com os padroes
 def calcular_quantidade_ruas(diagonal_maior, espacamento):
-    """Calcula a quantidade de ruas na lavoura e arredonda para o inteiro mais próximo"""
     return round(diagonal_maior / espacamento)
 
-
+#Calcula a quantidade total de insumos necessários, descontando a área ocupada pelas ruas
 def calcular_insumos(area, dosagem, ruas, espacamento):
-    """Calcula a quantidade total de insumos necessários, descontando a área ocupada pelas ruas"""
     area_util = area - (ruas * espacamento)
     if area_util < 0:
-        area_util = 0  # Para evitar valores negativos caso o espaçamento seja maior que a área
-    return round(area_util * dosagem)  # Arredonda o total de insumos em litros
+        area_util = 0
+    return round(area_util * dosagem)
 
-
+#Permite escolher um dos insumos disponíveis para a cultura selecionada
 def escolher_insumo(cultura):
-    """Permite escolher um dos insumos disponíveis para a cultura selecionada"""
     insumos_disponiveis = INSUMOS_CAFE if cultura == "café" else INSUMOS_CANA
     print("\n📌 Escolha um dos insumos disponíveis para esta cultura:")
     for i, insumo in enumerate(insumos_disponiveis, start=1):
@@ -44,9 +41,8 @@ def escolher_insumo(cultura):
         except ValueError:
             print("❌ Entrada inválida! Digite um número válido.")
 
-
+#Entrada de dados para uma nova plantação
 def adicionar_plantacao():
-    """Entrada de dados para uma nova plantação"""
     nome = input("Informe o nome da plantação: ").strip()
 
     cultura = input("Informe a cultura (Café ou Cana-de-açúcar): ").strip().lower()
@@ -82,9 +78,8 @@ def adicionar_plantacao():
 
     print("\n✅ Dados cadastrados com sucesso!\n")
 
-
+#Exibe os dados cadastrados
 def listar_plantacoes():
-    """Exibe os dados cadastrados"""
     if not plantacoes:
         print("\n🚫 Nenhuma plantação cadastrada.\n")
         return
@@ -95,9 +90,8 @@ def listar_plantacoes():
               f"Área: {p['Área (m²)']} m², Ruas: {p['Quantidade de Ruas']}, Insumo Total: {p['Insumo Total (L)']} L")
     print()
 
-
+#Imprime os dados das plantações no formato JSON no terminal
 def exportar_json():
-    """Imprime os dados das plantações no formato JSON no terminal"""
     if not plantacoes:
         print("\n🚫 Nenhuma plantação cadastrada para exportar.\n")
         return
@@ -105,9 +99,8 @@ def exportar_json():
     print("\n📤 JSON das Plantações (Copie e cole no R):\n")
     print(json.dumps(plantacoes, ensure_ascii=False, indent=4))
 
-
+#Atualiza um registro de plantação
 def atualizar_plantacao():
-    """Atualiza um registro de plantação"""
     listar_plantacoes()
 
     if not plantacoes:
@@ -147,9 +140,8 @@ def atualizar_plantacao():
     else:
         print("\n🚫 Índice inválido.\n")
 
-
+#Remove um registro de plantação
 def remover_plantacao():
-    """Remove um registro de plantação"""
     listar_plantacoes()
 
     if not plantacoes:
@@ -162,9 +154,8 @@ def remover_plantacao():
     else:
         print("\n🚫 Índice inválido.\n")
 
-
+#Exibe o menu principal
 def menu():
-    """Exibe o menu principal"""
     while True:
         print("=== 🌱 MENU PRINCIPAL 🌱 ===")
         print("1️⃣  Adicionar Plantação")
@@ -192,6 +183,5 @@ def menu():
         else:
             print("🚫 Opção inválida! Tente novamente.")
 
-
-# Executa o menu
+#Executa o menu
 menu()
